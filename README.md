@@ -42,9 +42,9 @@ Keep the two repos in step: game changes made here should also go into the Andro
 
 ## Before you submit to the App Store
 1. **App Store Connect** › **Apps** › **+** › New App: platform iOS, bundle id `com.funpixelnest.circuitforge`, name "Circuit Forge".
-2. **AdMob**: add an iOS app called Circuit Forge iOS and create Banner (adaptive), Rewarded and Interstitial units. Then put:
-   - the iOS **app ID** (`ca-app-pub-…~…`) into `ios/App/App/Info.plist` › `GADApplicationIdentifier` (it is still Google's test ID);
-   - the three **ad unit IDs** into `game-src/money.js` › `MONEY_CONFIG.ads.ios` (still Google's test units), then run `python3 game-src/build_app.py`.
+2. **AdMob**: the iOS app and its Banner, Interstitial and Rewarded units are created and their IDs are in
+   `Info.plist` and `game-src/money.js` (listed in STORE_SETUP.md). Once the app is live, link it to its App Store
+   listing in AdMob (App settings › App store details › Add) so AdMob approves it for ads.
    - Optionally paste Google's full SKAdNetwork list (AdMob iOS quick-start page) into `Info.plist` › `SKAdNetworkItems`. Google's own ID is already there.
 3. **In-app purchases**: create the 7 products from [STORE_SETUP.md](STORE_SETUP.md) (4 consumable hint packs, 3 non-consumable).
    Product IDs must match exactly. Each needs a display name, description and a review screenshot (the Shop screen works).

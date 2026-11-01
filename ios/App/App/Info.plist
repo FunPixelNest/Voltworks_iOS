@@ -67,7 +67,7 @@
 	<key>UIRequiresFullScreen</key>
 	<true/>
 	<key>GADApplicationIdentifier</key>
-	<string>ca-app-pub-3940256099942544~1458002511</string>
+	<string>ca-app-pub-5089346574611451~6123839960</string>
 	<key>NSUserTrackingUsageDescription</key>
 	<string>This lets us show you ads that are more relevant. Ads keep Circuit Forge free.</string>
 	<key>SKAdNetworkItems</key>

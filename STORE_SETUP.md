@@ -77,7 +77,10 @@ Never tap your own live ads. Keep `testAds: true` on test phones, or add the pho
   - Interstitial `ca-app-pub-5089346574611451/9091969417`
   - Rewarded `ca-app-pub-5089346574611451/6670032239`
 - `testAds: false` (real ads). Add your phone as a test device in AdMob (Settings › Test devices) before you play the release build a lot.
-- iOS still uses Google's test units until an iOS app is added in AdMob.
+- AdMob iOS app: `ca-app-pub-5089346574611451~6123839960`
+  - Banner `ca-app-pub-5089346574611451/5274239834`
+  - Interstitial `ca-app-pub-5089346574611451/1485756807`
+  - Rewarded `ca-app-pub-5089346574611451/8528631122`
 
 ## Switching ads on and off (Firebase Remote Config)
 Firebase console › Remote Config (project Voltworks). Change a value and press **Publish changes**. Players pick it up the next time they open the game. All values are strings.
