@@ -1,0 +1,53 @@
+<!doctype html><html><head><style>@font-face{font-family:F;font-weight:700;src:url(fredoka-latin-700-normal.woff2)}body{margin:0;background:#000}</style></head><body>
+<script>
+const TAU=Math.PI*2;
+const load=n=>new Promise(r=>{const i=new Image();i.onload=()=>r(i);i.src=n+'.webp'});
+function bg(c,w,h,dark){
+  const R=Math.max(w,h);
+  let g=c.createRadialGradient(w/2,h*0.42,0,w/2,h*0.5,R*0.75);
+  if(dark){g.addColorStop(0,'#2f7df0');g.addColorStop(0.45,'#1546b8');g.addColorStop(1,'#0a1a55');}
+  else {g.addColorStop(0,'#5cc2ff');g.addColorStop(0.5,'#1f6ff0');g.addColorStop(1,'#0c2f9e');}
+  c.fillStyle=g;c.fillRect(0,0,w,h);
+  // soft sun rays
+  c.save();c.translate(w/2,h*0.46);c.globalCompositeOperation='lighter';
+  for(let k=0;k<16;k++){c.rotate(TAU/16);c.beginPath();c.moveTo(0,0);c.arc(0,0,R,-0.08,0.08);c.closePath();
+    const rg=c.createRadialGradient(0,0,0,0,0,R*0.7);rg.addColorStop(0,'rgba(255,255,255,.10)');rg.addColorStop(1,'rgba(255,255,255,0)');c.fillStyle=rg;c.fill();}
+  c.restore();
+}
+function bolt(c,x,y,s){
+  const P=[[0.12,-0.5],[-0.22,0.06],[0.02,0.06],[-0.12,0.5],[0.24,-0.1],[0.0,-0.1],[0.14,-0.5]];
+  c.save();c.translate(x,y);c.scale(s,s);c.lineJoin='round';
+  c.beginPath();P.forEach((p,i)=>i?c.lineTo(p[0],p[1]):c.moveTo(p[0],p[1]));c.closePath();
+  c.shadowColor='rgba(0,20,80,.55)';c.shadowBlur=0.06*1;c.shadowOffsetY=0.02;
+  c.lineWidth=0.07;c.strokeStyle='#fff';c.stroke();
+  c.shadowColor='transparent';
+  const g=c.createLinearGradient(0,-0.5,0,0.5);g.addColorStop(0,'#ffe25a');g.addColorStop(0.5,'#ffa31a');g.addColorStop(1,'#ff6a00');c.fillStyle=g;c.fill();
+  // gloss
+  c.save();c.clip();c.fillStyle='rgba(255,255,255,.35)';c.beginPath();c.moveTo(-0.3,-0.6);c.lineTo(0.4,-0.6);c.lineTo(0.4,-0.15);c.lineTo(-0.3,0.05);c.fill();c.restore();
+  c.restore();
+}
+function glow(c,x,y,r,col,a){const g=c.createRadialGradient(x,y,0,x,y,r);g.addColorStop(0,col.replace('A',a));g.addColorStop(1,col.replace('A',0));c.fillStyle=g;c.fillRect(x-r,y-r,2*r,2*r);}
+function emblem(c,cx,cy,S,IM){
+  glow(c,cx,cy,S*0.75,'rgba(120,240,255,A)',0.55);
+  c.save();c.shadowColor='rgba(0,15,60,.5)';c.shadowBlur=S*0.08;c.shadowOffsetY=S*0.03;
+  c.drawImage(IM.target_on,cx-S/2,cy-S/2,S,S);c.restore();
+  bolt(c,cx+S*0.02,cy+S*0.02,S*0.62);
+}
+async function render(w,h,kind){
+  const IM={target_on:await load('target_on')};
+  await document.fonts.load('700 100px F');
+  const cv=document.createElement('canvas');cv.width=w;cv.height=h;const c=cv.getContext('2d');
+  if(kind!=='fg') bg(c,w,h,kind==='splash');
+  if(kind==='bg') return cv.toDataURL();
+  const m=Math.min(w,h);
+  if(kind==='icon') emblem(c,w/2,h/2,m*0.74,IM);
+  if(kind==='fg') emblem(c,w/2,h/2,m*0.5,IM);
+  if(kind==='splash'){ emblem(c,w/2,h*0.44,m*0.28,IM);
+    c.textAlign='center';c.font='700 '+Math.round(m*0.075)+'px F';
+    c.shadowColor='rgba(0,10,50,.5)';c.shadowBlur=m*0.01;c.shadowOffsetY=m*0.006;
+    c.fillStyle='#fff';c.fillText('Circuit',w/2-m*0.0,h*0.45+m*0.2);
+    const g=c.createLinearGradient(0,h*0.45+m*0.22,0,h*0.45+m*0.29);g.addColorStop(0,'#ffd34a');g.addColorStop(1,'#ff8a00');c.fillStyle=g;c.fillText('Forge',w/2,h*0.45+m*0.28);}
+  return cv.toDataURL();
+}
+window.go=async()=>({icon:await render(1024,1024,'icon'),fg:await render(1024,1024,'fg'),bg:await render(1024,1024,'bg'),splash:await render(2732,2732,'splash')});
+</script></body></html>

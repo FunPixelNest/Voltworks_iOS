@@ -1,0 +1,9 @@
+App/build
+App/Pods
+App/output
+DerivedData
+xcuserdata
+
+
+# Capacitor's generated files (web assets, configs, cordova plugin stub) are committed on purpose
+# so the project opens and builds in Xcode straight after cloning.

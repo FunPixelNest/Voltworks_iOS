@@ -1,0 +1,24 @@
+{
+  "name": "vw-ios",
+  "version": "1.0.0",
+  "description": "Circuit Forge for iPhone and iPad (Capacitor)",
+  "scripts": {
+    "build": "python3 game-src/build_app.py",
+    "sync": "python3 game-src/build_app.py && npx cap sync ios",
+    "test": "cd game-src/tests && node test.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@capacitor-community/admob": "^8.3.0",
+    "@capacitor/app": "^8.1.2",
+    "@capacitor/cli": "^8.5.3",
+    "@capacitor/core": "^8.5.3",
+    "@capacitor/haptics": "^8.0.2",
+    "@capacitor/ios": "^8.6.0",
+    "@capgo/capacitor-social-login": "^8.7.5",
+    "@capgo/native-purchases": "^8.9.6"
+  },
+  "private": true
+}

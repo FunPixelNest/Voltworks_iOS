@@ -1,0 +1,30 @@
+{
+	"appId": "com.funpixelnest.circuitforge",
+	"appName": "Circuit Forge",
+	"webDir": "www",
+	"backgroundColor": "#070a14",
+	"ios": {
+		"backgroundColor": "#070a14",
+		"contentInset": "never",
+		"scrollEnabled": false,
+		"allowsLinkPreview": false,
+		"preferredContentMode": "mobile"
+	},
+	"plugins": {
+		"SocialLogin": {
+			"providers": {
+				"google": true,
+				"apple": true,
+				"facebook": false,
+				"twitter": false
+			}
+		}
+	},
+	"packageClassList": [
+		"AdMobPlugin",
+		"AppPlugin",
+		"HapticsPlugin",
+		"SocialLoginPlugin",
+		"NativePurchasesPlugin"
+	]
+}

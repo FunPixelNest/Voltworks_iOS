@@ -1,0 +1,45 @@
+const { chromium } = require('playwright');
+(async () => {
+  const b = await chromium.launch(); const log = [];
+  const ctx = await b.newContext({ viewport: { width: 1280, height: 820 } });
+  const p = await ctx.newPage(); await p.addInitScript(() => { window.__VWnoIntro = true; }); await p.addInitScript(() => { window.__VWnoIntro = true; }); const errs = [];
+  p.on('pageerror', e => errs.push(e.message));
+  await p.goto('file://' + require('path').resolve(__dirname, '..') + '/voltworks_test.html'); await p.waitForTimeout(400);
+  await p.click('#editorBtn'); await p.waitForTimeout(500);
+  const geo = async () => p.evaluate(() => { const r = document.querySelector('#board').getBoundingClientRect(); const L = window.__VWL; return { x: r.x + L.ox, y: r.y + L.oy, s: L.s }; });
+  let g = await geo();
+  const C = (x, y) => [g.x + (x + .5) * g.s, g.y + (y + .5) * g.s];
+  const CS = async (x, y) => { const q = await p.evaluate(([x, y]) => window.__VWscreen(x + .5, y + .5), [x, y]); return [q.x, q.y]; };
+  async function stroke(cells) { const [x0, y0] = C(...cells[0]); await p.mouse.move(x0, y0); await p.mouse.down(); for (const c of cells.slice(1)) { const [x, y] = C(...c); await p.mouse.move(x, y, { steps: 4 }); } await p.mouse.up(); await p.waitForTimeout(80); }
+  await stroke([[1, 11], [2, 11], [3, 11]]);
+  await p.click('.tool[data-tool=b]'); await stroke([[3, 0], [4, 0], [5, 0], [6, 0]]);
+  await p.click('.edTab[data-tab=tray]'); await p.waitForTimeout(100);
+  const plus = async t => p.locator('.invRow').filter({ hasText: t }).locator('button').nth(1).click();
+  await plus('Light Bulb'); await plus('Solar Panel');
+  await p.click('.edTab[data-tab=board]'); await p.fill('#edName', 'Sky Beam');
+  await p.screenshot({ path: 'shots/ed_build.png' });
+  log.push('status before test: ' + await p.textContent('#edStatus'));
+  await p.click('#edTest'); await p.waitForTimeout(500);
+  g = await geo();
+  async function dragCard(t, x, y) { const cb = await p.locator(`.card[data-t=${t}]`).boundingBox(); await p.mouse.move(cb.x + cb.width / 2, cb.y + cb.height / 2); await p.mouse.down(); const [tx, ty] = await CS(x, y); await p.mouse.move(tx, ty, { steps: 10 }); await p.mouse.up(); await p.waitForTimeout(150); }
+  await dragCard('bulb', 3, 11); await dragCard('solar', 3, 0);
+  await p.click('#powerBtn'); await p.waitForTimeout(2600);
+  log.push('win overlay: ' + await p.isVisible('#win') + ' / ' + await p.textContent('#winRibbon'));
+  await p.screenshot({ path: 'shots/ed_test.png' });
+  await p.click('#winEdit'); await p.waitForTimeout(400);
+  log.push('status after test: ' + await p.textContent('#edStatus'));
+  await p.click('#edSave'); await p.waitForTimeout(200);
+  log.push('saved levels: ' + await p.evaluate(() => JSON.parse(localStorage.getItem('voltworks.custom')).length));
+  await p.click('#edShare'); await p.waitForTimeout(200);
+  const code = await p.inputValue('#edCode'); log.push('share code length: ' + code.length);
+  await p.click('#edModalClose');
+  await p.click('.edTab[data-tab=board]'); await p.click('#edNew'); await p.waitForTimeout(300);
+  await p.click('.edTab[data-tab=board]'); await p.click('#edImport'); await p.fill('#edCode', code); await p.click('#edGo'); await p.waitForTimeout(400);
+  log.push('imported name: ' + await p.textContent('#lvlName') + ' / ' + await p.textContent('#edStatus'));
+  await p.click('#menuBtn'); await p.waitForTimeout(300);
+  log.push('my levels tiles: ' + await p.locator('.lv.mine').count());
+  await p.screenshot({ path: 'shots/ed_levels.png' });
+  await p.locator('.lv.mine .tile').first().click(); await p.waitForTimeout(500);
+  log.push('playing custom: ' + await p.textContent('#lvlName') + ' tray cards: ' + await p.locator('#inv .card').count());
+  console.log(log.join('\n')); console.log(errs.join('\n') || 'no errors'); await b.close();
+})();
