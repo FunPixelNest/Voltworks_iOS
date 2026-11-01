@@ -18,6 +18,9 @@
 				"facebook": false,
 				"twitter": false
 			}
+		},
+		"SystemBars": {
+			"hidden": true
 		}
 	},
 	"packageClassList": [

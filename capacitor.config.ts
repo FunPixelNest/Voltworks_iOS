@@ -14,6 +14,8 @@ const config: CapacitorConfig = {
     preferredContentMode: 'mobile',
   },
   plugins: {
+    // full screen: hides the status bar and auto-hides the home bar (Capacitor's built-in SystemBars plugin)
+    SystemBars: { hidden: true },
     // The iOS app offers Sign in with Apple (plus email). Google stays switched on so the shared game code works unchanged. Facebook and Twitter are left out of the build.
     SocialLogin: {
       providers: { google: true, apple: true, facebook: false, twitter: false },
